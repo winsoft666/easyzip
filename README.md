@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.com/winsoft666/easyzip.svg?branch=master)](https://travis-ci.com/winsoft666/easyzip)
 
-[>>> 中文版](README_ch.md)
-
 # EasyZip
 C++ wrapper around minizip compression library.
 
