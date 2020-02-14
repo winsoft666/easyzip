@@ -15,6 +15,8 @@
 #ifndef _IOWIN32_H
 #define _IOWIN32_H
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+
 #include <windows.h>
 
 #ifdef __cplusplus
@@ -28,6 +30,8 @@ void fill_win32_filefunc64W OF((zlib_filefunc64_def* pzlib_filefunc_def));
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif
