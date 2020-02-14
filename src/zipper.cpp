@@ -1,5 +1,4 @@
-#include "easyzip/easy_zip.h"
-
+#include "easyzip/zipper.h"
 #include <fstream>
 #include <stdexcept>
 #include "defs.h"
@@ -31,7 +30,7 @@ struct Zipper::Impl {
     int flags = Zipper::Append;
 
     /* open the zip file for output */
-    if (checkFileExists(filename))
+    if (IsFileExists(filename))
       mode = (flags & Zipper::Overwrite) ? APPEND_STATUS_CREATE
                                          : APPEND_STATUS_ADDINZIP;
     else
@@ -127,13 +126,13 @@ struct Zipper::Impl {
     if (flags & Zipper::Better)
       compressLevel = 9;
 
-    zip64 = (int)isLargeFile(input_stream);
+    zip64 = (int)IsLargeFile(input_stream);
     if (password.empty())
       err = zipOpenNewFileInZip64(
           m_zf, nameInZip.c_str(), &zi, NULL, 0, NULL, 0, NULL /* comment*/,
           (compressLevel != 0) ? Z_DEFLATED : 0, compressLevel, zip64);
     else {
-      getFileCrc(input_stream, buff, crcFile);
+      GetFileCrc(input_stream, buff, crcFile);
       err = zipOpenNewFileInZip3_64(
           m_zf, nameInZip.c_str(), &zi, NULL, 0, NULL, 0, NULL /* comment*/,
           (compressLevel != 0) ? Z_DEFLATED : 0, compressLevel, 0,
@@ -292,14 +291,14 @@ bool Zipper::add(std::istream& source,
 }
 
 bool Zipper::add(const std::string& fileOrFolderPath, zipFlags flags) {
-  if (isDirectory(fileOrFolderPath)) {
-    std::string folderName = fileNameFromPath(fileOrFolderPath);
-    std::vector<std::string> files = filesFromDirectory(fileOrFolderPath);
+  if (IsDirectory(fileOrFolderPath)) {
+    std::string folderName = GetFileNameFromPath(fileOrFolderPath);
+    std::vector<std::string> files = GetFilesFromDir(fileOrFolderPath);
     std::vector<std::string>::iterator it = files.begin();
     for (; it != files.end(); ++it) {
       std::ifstream input(it->c_str(), std::ios::binary);
       std::string nameInZip =
-          it->substr(it->rfind(folderName + Separator), it->size());
+          it->substr(it->rfind(folderName + SEPARATOR), it->size());
       add(input, nameInZip, flags);
       input.close();
     }
@@ -310,7 +309,7 @@ bool Zipper::add(const std::string& fileOrFolderPath, zipFlags flags) {
     if (flags & Zipper::SaveHierarchy)
       fullFileName = fileOrFolderPath;
     else
-      fullFileName = fileNameFromPath(fileOrFolderPath);
+      fullFileName = GetFileNameFromPath(fileOrFolderPath);
 
     add(input, fullFileName, flags);
 

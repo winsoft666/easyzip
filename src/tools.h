@@ -4,21 +4,21 @@
 #include <string>
 #include <vector>
 
+namespace easyzip {
 #ifdef WIN32
-const std::string Separator = "\\";
+const std::string SEPARATOR = "\\";
 #else
-const std::string Separator = "/";
+const std::string SEPARATOR = "/";
 #endif
 
-namespace easyzip {
-void getFileCrc(std::istream& input_stream, std::vector<char>& buff, unsigned long& result_crc);
-bool isLargeFile(std::istream& input_stream);
-bool checkFileExists(const std::string& filename);
-bool makedir(const std::string& newdir);
-void removeFolder(const std::string& foldername);
-std::string parentDirectory(const std::string& filepath);
-std::string currentPath();
-bool isDirectory(const std::string& path);
-std::vector<std::string> filesFromDirectory(const std::string& path);
-std::string fileNameFromPath(const std::string& path);
+void GetFileCrc(std::istream& input_stream, std::vector<char>& buff, unsigned long& result_crc);
+bool IsLargeFile(std::istream& input_stream);
+bool IsFileExists(const std::string& filename);
+bool MakeDir(const std::string& newdir);
+void RemoveDir(const std::string& foldername);
+std::string GetParentDir(const std::string& filepath);
+std::string GetCurrentPath();
+bool IsDirectory(const std::string& path);
+std::vector<std::string> GetFilesFromDir(const std::string& path);
+std::string GetFileNameFromPath(const std::string& path);
 }  // namespace easyzip

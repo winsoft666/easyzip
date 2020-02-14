@@ -11,7 +11,6 @@
 #include <vector>
 
 namespace easyzip {
-
 class ZipEntry;
 
 class Unzipper {
@@ -28,11 +27,9 @@ class Unzipper {
   bool extract(const std::string& destination,
                const std::map<std::string, std::string>& alternativeNames);
   bool extract(const std::string& destination = std::string());
-  bool extractEntry(const std::string& name,
-                    const std::string& destination = std::string());
+  bool extractEntry(const std::string& name, const std::string& destination = std::string());
   bool extractEntryToStream(const std::string& name, std::ostream& stream);
-  bool extractEntryToMemory(const std::string& name,
-                            std::vector<unsigned char>& vec);
+  bool extractEntryToMemory(const std::string& name, std::vector<unsigned char>& vec);
 
   void close();
 
@@ -72,14 +69,13 @@ class ZipEntry {
            int minute,
            int second,
            unsigned long dosdate)
-      : name(name),
-        compressedSize(compressed_size),
-        uncompressedSize(uncompressed_size),
-        dosdate(dosdate) {
+      : name(name)
+      , compressedSize(compressed_size)
+      , uncompressedSize(uncompressed_size)
+      , dosdate(dosdate) {
     // timestamp YYYY-MM-DD HH:MM:SS
     std::stringstream str;
-    str << year << "-" << month << "-" << day << " " << hour << ":" << minute
-        << ":" << second;
+    str << year << "-" << month << "-" << day << " " << hour << ":" << minute << ":" << second;
     timestamp = str.str();
 
     unixdate.tm_year = year;
@@ -98,4 +94,4 @@ class ZipEntry {
   tm_s unixdate;
 };
 }  // namespace easyzip
-#endif // !EASY_UNZIP_H__
+#endif  // !EASY_UNZIP_H__

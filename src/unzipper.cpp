@@ -1,4 +1,4 @@
-#include "easyzip/easy_unzip.h"
+#include "easyzip/unzipper.h"
 
 #include <exception>
 #include <fstream>
@@ -210,7 +210,7 @@ struct Unzipper::Impl {
     int err = UNZ_ERRNO;
 
     /* If zip entry is a directory then create it on disk */
-    makedir(parentDirectory(filename));
+    MakeDir(GetParentDir(filename));
 
     /* Create the file on disk so we can unzip to it */
     std::ofstream output_file(filename.c_str(), std::ofstream::binary);
@@ -365,7 +365,7 @@ struct Unzipper::Impl {
       if (!locateEntry(it->name))
         continue;
 
-      std::string alternativeName = destination.empty() ? "" : destination + Separator;
+      std::string alternativeName = destination.empty() ? "" : destination + SEPARATOR;
 
       if (alternativeNames.find(it->name) != alternativeNames.end())
         alternativeName += alternativeNames.at(it->name);
@@ -379,7 +379,7 @@ struct Unzipper::Impl {
   }
 
   bool extractEntry(const std::string& name, const std::string& destination) {
-    std::string outputFile = destination.empty() ? name : destination + Separator + name;
+    std::string outputFile = destination.empty() ? name : destination + SEPARATOR + name;
 
     if (locateEntry(name)) {
       ZipEntry entry = currentEntryInfo();

@@ -26,10 +26,10 @@ class Zipper {
 
   bool add(std::istream& source,
            const std::tm& timestamp,
-           const std::string& nameInZip = std::string(),
+           const std::string& nameInZip,
            zipFlags flags = Better);
   bool add(std::istream& source,
-           const std::string& nameInZip = std::string(),
+           const std::string& nameInZip,
            zipFlags flags = Better);
   bool add(const std::string& fileOrFolderPath, zipFlags flags = Better);
 
@@ -38,6 +38,7 @@ class Zipper {
 
  private:
   void release();
+
   std::string m_password;
   std::string m_zipname;
   std::iostream& m_obuffer;
