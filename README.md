@@ -3,8 +3,6 @@
 # EasyZip
 C++ wrapper around minizip compression library.
 
-**EasyZip is modified based on [Zipper](https://github.com/sebastiandev/zipper). In order to avoid name conflicts, renamed to EasyZip.**
-
 ---
 
 **EasyZip**'s goal is to bring the power and simplicity of minizip to a more object oriented/c++ user friendly library.
