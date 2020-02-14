@@ -3,36 +3,31 @@
 # EasyZip
 C++ wrapper around minizip compression library.
 
----
-
 **EasyZip**'s goal is to bring the power and simplicity of minizip to a more object oriented/c++ user friendly library.
 It was born out of the necessity of a compression library that would be reliable, simple and flexible. 
 By flexibility I mean supporting all kinds of inputs and outputs, but specifically been able to compress into memory instead of been restricted to file compression only, and using data from memory instead of just files as well.
 
-### Features:
+---
+
+# Features
 - [x] Create zip in memory
 - [x] Allow files, vector and generic streams as input to zip
 - [x] File mappings for replacing strategies (overwrite if exists or use alternative name from mapping)
 - [x] Password protected zip
 - [x] Multi platform
 
+---
 
-### Getting Started
+# Compiling/Install
 
-In order to use and compile `EasyZip` you need to have [zlib](http://www.zlib.net) source files.
-**EasyZip** depends on minizip as well but since it is used as a submodule, you get it when cloning
-the repo and it gets compiled with the project.
+In order to use and compile `EasyZip` you need to have [zlib](http://www.zlib.net).
 
-
-
-#### Dependencies
 The preferred way is to use vckpg to install zlib:
 
 ```shell
 vcpkg install zlib:x86-windows
 ```
 
-#### Compiling/Install
 The preferred way is to create a folder for the compilation output to avoid polluting the root folder:
 
 ```shell
@@ -45,7 +40,9 @@ make
 make install
 ```
 
-### Usage
+---
+
+# Getting Started
 
 There are two classes available Zipper and Unzipper. 
 
