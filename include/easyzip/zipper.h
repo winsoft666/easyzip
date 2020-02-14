@@ -12,11 +12,15 @@
 namespace easyzip {
 class Zipper {
  public:
-  // clang-format off
-		// Minizip options/params:
-		//              -o                -a             -0            -1             -9             -j
-		enum zipFlags { Overwrite = 0x01, Append = 0x02, Store = 0x04, Faster = 0x08, Better = 0x10, NoPaths = 0x20, SaveHierarchy = 0x40 };
-  // clang-format on
+  enum zipFlags {
+    Overwrite = 0x01,  // -o
+    Append = 0x02,     // -a
+    Store = 0x04,      // -0
+    Faster = 0x08,     // -1
+    Better = 0x10,     // -9
+    NoPaths = 0x20,    // -j
+    SaveHierarchy = 0x40
+  };
   Zipper(std::iostream& buffer);
   Zipper(std::vector<unsigned char>& buffer);
   Zipper(const std::string& zipname);
@@ -28,9 +32,7 @@ class Zipper {
            const std::tm& timestamp,
            const std::string& nameInZip,
            zipFlags flags = Better);
-  bool add(std::istream& source,
-           const std::string& nameInZip,
-           zipFlags flags = Better);
+  bool add(std::istream& source, const std::string& nameInZip, zipFlags flags = Better);
   bool add(const std::string& fileOrFolderPath, zipFlags flags = Better);
 
   void open();
@@ -51,4 +53,4 @@ class Zipper {
   Impl* m_impl;
 };
 }  // namespace easyzip
-#endif // !EASY_ZIP_H_
+#endif  // !EASY_ZIP_H_
