@@ -111,15 +111,6 @@ void change_file_date(const char *filename, uLong dosdate, tm_unz tmu_date)
 #endif
 }
 
-int check_file_exists(const char* filename)
-{
-    FILE* ftestexist = FOPEN_FUNC(filename,"rb");
-    if (ftestexist == NULL)
-        return 0;
-    fclose(ftestexist);
-    return 1;
-}
-
 int makedir(const char *newdir)
 {
     char *buffer = NULL;
@@ -347,7 +338,7 @@ int do_extract_currentfile(unzFile uf, int opt_extract_without_path, int* popt_o
         write_filename = filename_inzip;
 
     /* Determine if the file should be overwritten or not and ask the user if needed */
-    if ((err == UNZ_OK) && (*popt_overwrite == 0) && (check_file_exists(write_filename)))
+    if ((err == UNZ_OK) && (*popt_overwrite == 0) && (access(write_filename, 0) == 0))
     {
         char rep = 0;
         do

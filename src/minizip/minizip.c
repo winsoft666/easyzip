@@ -123,15 +123,6 @@ uLong filetime(const char *filename, tm_zip *tmzip, uLong *dostime)
     return ret;
 }
 
-int check_file_exists(const char* filename)
-{
-    FILE* ftestexist = FOPEN_FUNC(filename,"rb");
-    if (ftestexist == NULL)
-        return 0;
-    fclose(ftestexist);
-    return 1;
-}
-
 int is_large_file(const char* filename)
 {
     ZPOS64_T pos = 0;
