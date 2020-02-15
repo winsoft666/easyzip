@@ -22,15 +22,30 @@ By flexibility I mean supporting all kinds of inputs and outputs, but specifical
 
 In order to use and compile `EasyZip` you need to have [zlib](http://www.zlib.net).
 
-The preferred way is to use vckpg to install zlib:
+The preferred way is to use vckpg to install zlib.
+
+The preferred way is to create a folder for the compilation output to avoid polluting the root folder.
+
+
+### Windows Platform
 
 ```shell
 vcpkg install zlib:x86-windows
+vcpkg install gtest:x86-windows
+git clone https://github.com/winsoft666/easyzip.git
+cd easyzip
+mkdir build
+cd build
+cmake ../
 ```
 
-The preferred way is to create a folder for the compilation output to avoid polluting the root folder:
+After run above commands, you can use Visual Studio to open solution, compile.
+
+### Linux Platform
 
 ```shell
+vcpkg install zlib:x64-linux
+vcpkg install gtest:x64-linux
 git clone https://github.com/winsoft666/easyzip.git
 cd easyzip
 mkdir build
@@ -52,6 +67,8 @@ They behave in the same manner regarding constructors and storage parameters.
 
 - Creating a zip file with 2 files:
 ```c++
+#include "easyzip.h"
+
 using namespace easyzip;
 
 std::ifstream input1("some file");

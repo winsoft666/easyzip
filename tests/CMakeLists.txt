@@ -35,7 +35,7 @@ if (NOT BUILD_SHARED_LIBS)
 	add_definitions(-DEASYZIP_STATIC)
 endif()
 
-file(GLOB SOURCE_FILES 			./*.cpp)
+file(GLOB SOURCE_FILES 			./*.cpp ./*.h)
 
 add_executable(
 	${EXE_NAME}
