@@ -1,5 +1,4 @@
-#include "easyzip/unzipper.h"
-
+#include "easyzip/easyzip.h"
 #include <exception>
 #include <fstream>
 #include <functional>

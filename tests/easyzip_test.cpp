@@ -5,9 +5,8 @@
 #include <string>
 #include <vector>
 #include "gtest/gtest.h"
-#include "../src/tools.h"
-#include "easyzip/unzipper.h"
-#include "easyzip/zipper.h"
+#include "tools.h"
+#include "easyzip/easyzip.h"
 using namespace easyzip;
 
 TEST(StringZipTest, Test1) {

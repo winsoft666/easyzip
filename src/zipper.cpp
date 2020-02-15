@@ -1,4 +1,4 @@
-#include "easyzip/zipper.h"
+#include "easyzip/easyzip.h"
 #include <fstream>
 #include <stdexcept>
 #include "defs.h"
