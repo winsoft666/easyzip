@@ -5,12 +5,6 @@
 #include <vector>
 
 namespace easyzip {
-#ifdef WIN32
-const std::string SEPARATOR = "\\";
-#else
-const std::string SEPARATOR = "/";
-#endif
-
 void GetFileCrc(std::istream& input_stream, std::vector<char>& buff, unsigned long& result_crc);
 bool IsLargeFile(std::istream& input_stream);
 bool IsFileExists(const std::string& filename);
@@ -21,4 +15,5 @@ std::string GetCurrentPath();
 bool IsDirectory(const std::string& path);
 std::vector<std::string> GetFilesFromDir(const std::string& path);
 std::string GetFileNameFromPath(const std::string& path);
+std::string GetLastDirNameFromPath(const std::string& path); // the path must a dir
 }  // namespace easyzip

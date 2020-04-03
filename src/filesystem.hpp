@@ -403,7 +403,11 @@ private:
     using impl_string_type = std::basic_string<impl_value_type>;
     friend class directory_iterator;
     void append_name(const char* name);
+#ifdef GHC_OS_WINDOWS
     static constexpr impl_value_type generic_separator = '/';
+#else
+    static constexpr impl_value_type generic_separator = '\\';
+#endif
     template <typename InputIterator>
     class input_iterator_range
     {

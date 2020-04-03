@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <iostream>
 #include <iterator>
+#include <assert.h>
 #include "defs.h"
 #include "filesystem.hpp"
 
@@ -83,4 +84,31 @@ std::string GetFileNameFromPath(const std::string& fullPath) {
   filesystem::path p(fullPath);
   return p.filename().string();
 }
+
+std::string GetLastDirNameFromPath(const std::string& path) {
+  if (path.length() == 0)
+    return "";
+  if (path.length() == 1 && path == ".")
+    return "";
+  if (path.length() == 2 && path == "..")
+    return "";
+
+  assert(IsDirectory(path));
+
+  std::string path2 = path;
+
+#ifdef _WIN32
+  if (path2[path2.length() - 1] == '\\') {
+    path2 = path2.substr(0, path2.length() - 1);
+  }
+#else
+  if (path2[path2.length() - 1] == '/') {
+    path2 = path2.substr(0, path2.length() - 1);
+  }
+#endif
+
+  filesystem::path p(path2);
+  return p.filename().string();
+}
+
 }  // namespace easyzip

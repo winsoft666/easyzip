@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include "defs.h"
 #include "tools.h"
+#include "filesystem.hpp"
 
 namespace easyzip {
 
@@ -364,7 +365,7 @@ struct Unzipper::Impl {
       if (!locateEntry(it->name))
         continue;
 
-      std::string alternativeName = destination.empty() ? "" : destination + SEPARATOR;
+      std::string alternativeName = destination.empty() ? "" : destination + filesystem::path_helper_base<char>::preferred_separator;
 
       if (alternativeNames.find(it->name) != alternativeNames.end())
         alternativeName += alternativeNames.at(it->name);
@@ -378,7 +379,7 @@ struct Unzipper::Impl {
   }
 
   bool extractEntry(const std::string& name, const std::string& destination) {
-    std::string outputFile = destination.empty() ? name : destination + SEPARATOR + name;
+    std::string outputFile = destination.empty() ? name : destination + filesystem::path_helper_base<char>::preferred_separator + name;
 
     if (locateEntry(name)) {
       ZipEntry entry = currentEntryInfo();

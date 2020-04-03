@@ -42,7 +42,8 @@ class EASYZIP_API Zipper {
     Faster = 0x08,     // -1
     Better = 0x10,     // -9
     NoPaths = 0x20,    // -j
-    SaveHierarchy = 0x40
+    SaveHierarchy = 0x40,
+    UNIX_SEPARATOR = 0x80
   };
   Zipper(std::iostream& buffer);
   Zipper(std::vector<unsigned char>& buffer);

@@ -155,7 +155,7 @@ TEST(FileZipTest, Test1) {
 
     zipper.open();
     // add TestFiles folder
-    zipper.add("TestFiles");
+    zipper.add("TestFiles\\");
     zipper.close();
 
     do {
