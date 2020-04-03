@@ -290,7 +290,7 @@ bool Zipper::add(std::istream& source,
   return add(source, {}, nameInZip, flags);
 }
 
-bool Zipper::add(const std::string& fileOrFolderPath, zipFlags flags) {
+bool Zipper::add(const std::string& fileOrFolderPath, zipFlags flags, bool unixSeparator) {
   if (IsDirectory(fileOrFolderPath)) {
     std::string folderName = GetLastDirNameFromPath(fileOrFolderPath);
     std::vector<std::string> files = GetFilesFromDir(fileOrFolderPath);
@@ -307,7 +307,7 @@ bool Zipper::add(const std::string& fileOrFolderPath, zipFlags flags) {
         nameInZip = *it;
       }
 #ifdef _WIN32
-      if (flags & UNIX_SEPARATOR) {
+      if (unixSeparator) {
         for (size_t i = 0; i < nameInZip.length(); i++) {
           if (nameInZip[i] == '\\')
             nameInZip[i] = '/';
@@ -327,7 +327,7 @@ bool Zipper::add(const std::string& fileOrFolderPath, zipFlags flags) {
       fullFileName = GetFileNameFromPath(fileOrFolderPath);
 
 #ifdef _WIN32
-    if (flags & UNIX_SEPARATOR) {
+    if (unixSeparator) {
       for (size_t i = 0; i < fullFileName.length(); i++) {
         if (fullFileName[i] == '\\')
           fullFileName[i] = '/';

@@ -43,7 +43,6 @@ class EASYZIP_API Zipper {
     Better = 0x10,     // -9
     NoPaths = 0x20,    // -j
     SaveHierarchy = 0x40,
-    UNIX_SEPARATOR = 0x80
   };
   Zipper(std::iostream& buffer);
   Zipper(std::vector<unsigned char>& buffer);
@@ -57,7 +56,7 @@ class EASYZIP_API Zipper {
            const std::string& nameInZip,
            zipFlags flags = Better);
   bool add(std::istream& source, const std::string& nameInZip, zipFlags flags = Better);
-  bool add(const std::string& fileOrFolderPath, zipFlags flags = Better);
+  bool add(const std::string& fileOrFolderPath, zipFlags flags = Better, bool unixSeparator = false);
 
   void open();
   void close();
