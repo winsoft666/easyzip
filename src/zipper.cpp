@@ -296,7 +296,7 @@ bool Zipper::add(const std::wstring& fileOrFolderPath, zipFlags flags, bool unix
     std::vector<std::wstring> files = GetFilesFromDir(fileOrFolderPath);
     std::vector<std::wstring>::iterator it = files.begin();
     for (; it != files.end(); ++it) {
-      std::ifstream input(it->c_str(), std::ios::binary);
+      std::ifstream input(TryFromUnicode(*it).c_str(), std::ios::binary);
       std::wstring nameInZip;
       if (folderName.length() > 0) {
         nameInZip = it->substr(
@@ -318,7 +318,7 @@ bool Zipper::add(const std::wstring& fileOrFolderPath, zipFlags flags, bool unix
       input.close();
     }
   } else {
-    std::ifstream input(fileOrFolderPath.c_str(), std::ios::binary);
+    std::ifstream input(TryFromUnicode(fileOrFolderPath).c_str(), std::ios::binary);
     std::wstring fullFileName;
 
     if (flags & Zipper::SaveHierarchy)
