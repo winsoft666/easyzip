@@ -4,8 +4,13 @@
 #include <iostream>
 #include <iterator>
 #include <assert.h>
+#include <locale>
+#include <codecvt>
 #include "defs.h"
 #include "filesystem.hpp"
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 namespace easyzip {
 /* calculate the CRC32 of a file, because to encrypt a file, we need known the CRC32 of the file before */
@@ -39,76 +44,220 @@ bool IsLargeFile(std::istream& input_stream) {
   return pos >= 0xffffffff;
 }
 
-bool IsFileExists(const std::string& filename) {
+bool IsFileExists(const std::wstring& filename) {
   std::error_code ec;
   return filesystem::exists(filename, ec);
 }
 
-bool MakeDir(const std::string& newdir) {
+bool MakeDir(const std::wstring& newdir) {
   std::error_code ec;
   return filesystem::create_directories(newdir, ec);
 }
 
-void RemoveDir(const std::string& foldername) {
+void RemoveDir(const std::wstring& foldername) {
   std::error_code ec;
   filesystem::remove_all(foldername, ec);
 }
 
-bool IsDirectory(const std::string& path) {
+bool IsDirectory(const std::wstring& path) {
   std::error_code ec;
   return filesystem::is_directory(path, ec);
 }
 
-std::string GetParentDir(const std::string& filepath) {
+std::wstring GetParentDir(const std::wstring& filepath) {
   filesystem::path p(filepath);
-  return p.parent_path().string();
+  return p.parent_path().wstring();
 }
 
-std::string GetCurrentPath() {
-  return filesystem::current_path().string();
+std::wstring GetCurrentPath() {
+  return filesystem::current_path().wstring();
 }
 
-std::vector<std::string> GetFilesFromDir(const std::string& path) {
-  std::vector<std::string> v;
+std::vector<std::wstring> GetFilesFromDir(const std::wstring& path) {
+  std::vector<std::wstring> v;
   filesystem::recursive_directory_iterator itr(path);
   for (itr = filesystem::begin(itr); itr != filesystem::end(itr); itr++) {
     if (!filesystem::is_directory(itr->path())) {
-      v.push_back(itr->path().string());
+      v.push_back(itr->path().wstring());
     }
   }
 
   return v;
 }
 
-std::string GetFileNameFromPath(const std::string& fullPath) {
+std::wstring GetFileNameFromPath(const std::wstring& fullPath) {
   filesystem::path p(fullPath);
-  return p.filename().string();
+  return p.filename().wstring();
 }
 
-std::string GetLastDirNameFromPath(const std::string& path) {
+std::wstring GetLastDirNameFromPath(const std::wstring& path) {
   if (path.length() == 0)
-    return "";
-  if (path.length() == 1 && path == ".")
-    return "";
-  if (path.length() == 2 && path == "..")
-    return "";
+    return L"";
+  if (path.length() == 1 && path == L".")
+    return L"";
+  if (path.length() == 2 && path == L"..")
+    return L"";
 
   assert(IsDirectory(path));
 
-  std::string path2 = path;
+  std::wstring path2 = path;
 
 #ifdef _WIN32
-  if (path2[path2.length() - 1] == '\\') {
+  if (path2[path2.length() - 1] == L'\\') {
     path2 = path2.substr(0, path2.length() - 1);
   }
 #else
-  if (path2[path2.length() - 1] == '/') {
+  if (path2[path2.length() - 1] == L'/') {
     path2 = path2.substr(0, path2.length() - 1);
   }
 #endif
 
   filesystem::path p(path2);
-  return p.filename().string();
+  return p.filename().wstring();
+}
+
+#ifdef _WIN32
+std::string UnicodeToAnsi(const std::wstring& str, unsigned int code_page /*= 0*/) {
+  std::string strRes;
+  int iSize = ::WideCharToMultiByte(code_page, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
+
+  if (iSize == 0)
+    return strRes;
+
+  char* szBuf = new (std::nothrow) char[iSize];
+
+  if (!szBuf)
+    return strRes;
+
+  memset(szBuf, 0, iSize);
+
+  ::WideCharToMultiByte(code_page, 0, str.c_str(), -1, szBuf, iSize, NULL, NULL);
+
+  strRes = szBuf;
+  delete[] szBuf;
+
+  return strRes;
+}
+
+std::wstring AnsiToUnicode(const std::string& str, unsigned int code_page /*= 0*/) {
+  std::wstring strRes;
+
+  int iSize = ::MultiByteToWideChar(code_page, 0, str.c_str(), -1, NULL, 0);
+
+  if (iSize == 0)
+    return strRes;
+
+  wchar_t* szBuf = new (std::nothrow) wchar_t[iSize];
+
+  if (!szBuf)
+    return strRes;
+
+  memset(szBuf, 0, iSize * sizeof(wchar_t));
+
+  ::MultiByteToWideChar(code_page, 0, str.c_str(), -1, szBuf, iSize);
+
+  strRes = szBuf;
+  delete[] szBuf;
+
+  return strRes;
+}
+
+std::string UnicodeToUtf8(const std::wstring& str) {
+  std::string strRes;
+
+  int iSize = ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
+
+  if (iSize == 0)
+    return strRes;
+
+  char* szBuf = new (std::nothrow) char[iSize];
+
+  if (!szBuf)
+    return strRes;
+
+  memset(szBuf, 0, iSize);
+
+  ::WideCharToMultiByte(CP_UTF8, 0, str.c_str(), -1, szBuf, iSize, NULL, NULL);
+
+  strRes = szBuf;
+  delete[] szBuf;
+
+  return strRes;
+}
+
+std::wstring Utf8ToUnicode(const std::string& str) {
+  std::wstring strRes;
+  int iSize = ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
+
+  if (iSize == 0)
+    return strRes;
+
+  wchar_t* szBuf = new (std::nothrow) wchar_t[iSize];
+
+  if (!szBuf)
+    return strRes;
+
+  memset(szBuf, 0, iSize * sizeof(wchar_t));
+  ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, szBuf, iSize);
+
+  strRes = szBuf;
+  delete[] szBuf;
+
+  return strRes;
+}
+
+std::string AnsiToUtf8(const std::string& str, unsigned int code_page /*= 0*/) {
+  return UnicodeToUtf8(AnsiToUnicode(str, code_page));
+}
+
+std::string Utf8ToAnsi(const std::string& str, unsigned int code_page /*= 0*/) {
+  return UnicodeToAnsi(Utf8ToUnicode(str), code_page);
+}
+
+#endif
+
+#if _MSC_VER >= 1900
+
+std::string utf16_to_utf8(std::wstring utf16_string) {
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
+  auto p = reinterpret_cast<const wchar_t*>(utf16_string.data());
+  return convert.to_bytes(p, p + utf16_string.size());
+}
+
+std::wstring utf8_to_utf16(std::string utf8_string) {
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
+  auto p = reinterpret_cast<const char*>(utf8_string.data());
+  auto str = convert.from_bytes(p, p + utf8_string.size());
+  std::wstring u16_str(str.begin(), str.end());
+  return u16_str;
+}
+#else
+
+std::string utf16_to_utf8(std::wstring utf16_string) {
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
+  return convert.to_bytes(utf16_string);
+}
+
+std::wstring utf8_to_utf16(std::string utf8_string) {
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
+  return convert.from_bytes(utf8_string);
+}
+#endif
+
+std::wstring TryToUnicode(const std::string& src) {
+#ifdef _WIN32
+  return AnsiToUnicode(src, 0);
+#else
+  return utf8_to_utf16(src);
+#endif
+}
+
+std::string TryFromUnicode(const std::wstring& src) {
+#ifdef _WIN32
+  return UnicodeToAnsi(src, 0);
+#else
+  return utf16_to_utf8(src);
+#endif
 }
 
 }  // namespace easyzip

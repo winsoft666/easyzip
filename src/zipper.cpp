@@ -21,7 +21,7 @@ struct Zipper::Impl {
 
   ~Impl() { close(); }
 
-  bool initFile(const std::string& filename) {
+  bool initFile(const std::wstring& filename) {
 #ifdef USEWIN32IOAPI
     zlib_filefunc64_def ffunc = {0};
 #endif
@@ -38,9 +38,9 @@ struct Zipper::Impl {
 
 #ifdef USEWIN32IOAPI
     fill_win32_filefunc64A(&ffunc);
-    m_zf = zipOpen2_64(filename.c_str(), mode, NULL, &ffunc);
+    m_zf = zipOpen2_64(TryFromUnicode(filename).c_str(), mode, NULL, &ffunc);
 #else
-    m_zf = zipOpen64(filename.c_str(), mode);
+    m_zf = zipOpen64(TryFromUnicode(filename).c_str(), mode);
 #endif
 
     return NULL != m_zf;
@@ -93,8 +93,8 @@ struct Zipper::Impl {
 
   bool add(std::istream& input_stream,
            const std::tm& timestamp,
-           const std::string& nameInZip,
-           const std::string& password,
+           const std::wstring& nameInZip,
+           const std::wstring& password,
            int flags) {
     if (!m_zf)
       return false;
@@ -129,15 +129,15 @@ struct Zipper::Impl {
     zip64 = (int)IsLargeFile(input_stream);
     if (password.empty())
       err = zipOpenNewFileInZip64(
-          m_zf, nameInZip.c_str(), &zi, NULL, 0, NULL, 0, NULL /* comment*/,
+          m_zf, TryFromUnicode(nameInZip).c_str(), &zi, NULL, 0, NULL, 0, NULL /* comment*/,
           (compressLevel != 0) ? Z_DEFLATED : 0, compressLevel, zip64);
     else {
       GetFileCrc(input_stream, buff, crcFile);
       err = zipOpenNewFileInZip3_64(
-          m_zf, nameInZip.c_str(), &zi, NULL, 0, NULL, 0, NULL /* comment*/,
+          m_zf, TryFromUnicode(nameInZip).c_str(), &zi, NULL, 0, NULL, 0, NULL /* comment*/,
           (compressLevel != 0) ? Z_DEFLATED : 0, compressLevel, 0,
           /* -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, */
-          -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.c_str(),
+          -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, TryFromUnicode(password).c_str(),
           crcFile, zip64);
     }
 
@@ -157,7 +157,7 @@ struct Zipper::Impl {
       } while ((err == ZIP_OK) && (size_read > 0));
     } else
       throw EXCEPTION_CLASS(
-          ("Error adding '" + nameInZip + "' to zip").c_str());
+          ("Error adding '" + TryFromUnicode(nameInZip) + "' to zip").c_str());
 
     if (ZIP_OK == err)
       err = zipCloseFileInZip(this->m_zf);
@@ -192,7 +192,7 @@ struct Zipper::Impl {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-Zipper::Zipper(const std::string& zipname)
+Zipper::Zipper(const std::wstring& zipname)
     : m_obuffer(*(new std::stringstream()))  // not used but using local
                                              // variable throws exception
       ,
@@ -211,7 +211,7 @@ Zipper::Zipper(const std::string& zipname)
   m_open = true;
 }
 
-Zipper::Zipper(const std::string& zipname, const std::string& password)
+Zipper::Zipper(const std::wstring& zipname, const std::wstring& password)
     : m_obuffer(*(new std::stringstream()))  // not used but using local
                                              // variable throws exception
       ,
@@ -279,28 +279,28 @@ void Zipper::release() {
 
 bool Zipper::add(std::istream& source,
                  const std::tm& timestamp,
-                 const std::string& nameInZip,
+                 const std::wstring& nameInZip,
                  zipFlags flags) {
   return m_impl->add(source, timestamp, nameInZip, m_password, flags);
 }
 
 bool Zipper::add(std::istream& source,
-                 const std::string& nameInZip,
+                 const std::wstring& nameInZip,
                  zipFlags flags) {
   return add(source, {}, nameInZip, flags);
 }
 
-bool Zipper::add(const std::string& fileOrFolderPath, zipFlags flags, bool unixSeparator) {
+bool Zipper::add(const std::wstring& fileOrFolderPath, zipFlags flags, bool unixSeparator) {
   if (IsDirectory(fileOrFolderPath)) {
-    std::string folderName = GetLastDirNameFromPath(fileOrFolderPath);
-    std::vector<std::string> files = GetFilesFromDir(fileOrFolderPath);
-    std::vector<std::string>::iterator it = files.begin();
+    std::wstring folderName = GetLastDirNameFromPath(fileOrFolderPath);
+    std::vector<std::wstring> files = GetFilesFromDir(fileOrFolderPath);
+    std::vector<std::wstring>::iterator it = files.begin();
     for (; it != files.end(); ++it) {
       std::ifstream input(it->c_str(), std::ios::binary);
-      std::string nameInZip;
+      std::wstring nameInZip;
       if (folderName.length() > 0) {
         nameInZip = it->substr(
-          it->rfind(folderName + filesystem::path_helper_base<char>::preferred_separator),
+          it->rfind(folderName + filesystem::path_helper_base<wchar_t>::preferred_separator),
           it->size());
       }
       else {
@@ -319,7 +319,7 @@ bool Zipper::add(const std::string& fileOrFolderPath, zipFlags flags, bool unixS
     }
   } else {
     std::ifstream input(fileOrFolderPath.c_str(), std::ios::binary);
-    std::string fullFileName;
+    std::wstring fullFileName;
 
     if (flags & Zipper::SaveHierarchy)
       fullFileName = fileOrFolderPath;
