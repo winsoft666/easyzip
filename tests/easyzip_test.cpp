@@ -129,7 +129,7 @@ TEST(FileZipTest, Test1) {
 
     EXPECT_TRUE(IsFileExists(L"测试Folder/test文件2.dat"));
 
-    std::ifstream testfile(L"测试Folder/test文件2.dat");
+    std::ifstream testfile("测试Folder/test文件2.dat");
     EXPECT_TRUE(testfile.good());
 
     std::string file_content((std::istreambuf_iterator<char>(testfile)),
@@ -138,17 +138,17 @@ TEST(FileZipTest, Test1) {
     EXPECT_TRUE(file_content == "other data to compression test");
 
     MakeDir(GetCurrentPath() + L"/测试Files/子文件夹");
-    std::ofstream test(L"测试Files/test文件1.txt");
+    std::ofstream test("测试Files/test文件1.txt");
     test << "test file compression";
     test.flush();
     test.close();
 
-    std::ofstream test1(L"测试Files/test2.pdf");
+    std::ofstream test1("测试Files/test2.pdf");
     test1 << "test file compression";
     test1.flush();
     test1.close();
 
-    std::ofstream test2(L"测试Files/子文件夹/test-sub.txt");
+    std::ofstream test2("测试Files/子文件夹/test-sub.txt");
     test2 << "test file compression";
     test2.flush();
     test2.close();
