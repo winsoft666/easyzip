@@ -201,7 +201,7 @@ struct Unzipper::Impl {
     newdate.tm_isdst = -1;
 
     ut.actime = ut.modtime = mktime(&newdate);
-    utime(filename.c_str(), &ut);
+    utime(TryFromUnicode(filename).c_str(), &ut);
 #endif
 #endif
   }
