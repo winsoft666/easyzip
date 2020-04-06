@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include "gtest/gtest.h"
-#include "tools.h"
+#include "test_tools.h"
 #include "easyzip/easyzip.h"
 using namespace easyzip;
 

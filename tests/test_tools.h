@@ -14,6 +14,3 @@ bool IsDirectory(const std::wstring &path);
 std::vector<std::wstring> GetFilesFromDir(const std::wstring &path);
 std::wstring GetFileNameFromPath(const std::wstring &path);
 std::wstring GetLastDirNameFromPath(const std::wstring &path); // the path must a dir
-
-std::wstring TryToUnicode(const std::string &src);
-std::string TryFromUnicode(const std::wstring &src);
