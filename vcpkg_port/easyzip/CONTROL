@@ -1,0 +1,5 @@
+Source: easyzip
+Version: 1.0
+Build-Depends: zlib
+Description: C++ wrapper around zlib compression library.
+Homepage: https://github.com/winsoft666/easyzip

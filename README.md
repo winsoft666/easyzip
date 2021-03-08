@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/winsoft666/easyzip.svg?branch=master)](https://travis-ci.com/winsoft666/easyzip)
 
-# EasyZip
+# 1. EasyZip
 C++ wrapper around minizip compression library.
 
 **EasyZip**'s goal is to bring the power and simplicity of minizip to a more object oriented/c++ user friendly library.
@@ -9,7 +9,7 @@ By flexibility I mean supporting all kinds of inputs and outputs, but specifical
 
 ---
 
-# Features
+# 2. Features
 - [x] Create zip in memory
 - [x] Allow files, vector and generic streams as input to zip
 - [x] File mappings for replacing strategies (overwrite if exists or use alternative name from mapping)
@@ -18,16 +18,16 @@ By flexibility I mean supporting all kinds of inputs and outputs, but specifical
 
 ---
 
-# Compiling/Install
+# 3. Compiling/Install
 
 In order to use and compile `EasyZip` you need to have [zlib](http://www.zlib.net).
 
-The preferred way is to use vckpg to install zlib.
+The preferred way is to use [vckpg](https://github.com/microsoft/vcpkg) to install zlib.
 
 The preferred way is to create a folder for the compilation output to avoid polluting the root folder.
 
-
-### Windows Platform
+## 3.1 Compiling/Install from source
+### 3.1.1 Windows Platform
 
 ```shell
 vcpkg install zlib:x86-windows
@@ -41,7 +41,7 @@ cmake ../
 
 After run above commands, you can use Visual Studio to open solution, compile.
 
-### Linux Platform
+### 3.1.2 Linux Platform
 
 ```shell
 vcpkg install zlib:x64-linux
@@ -54,6 +54,18 @@ cmake ../
 make
 make install
 ```
+
+## 3.2 Compiling/Install with [vcpkg](https://github.com/microsoft/vcpkg)
+1. Copy `vcpkg_port\easyzip` folder to `<vcpkg>\ports` folder.
+2. Using `vcpkg` command to install.
+```bat
+# Shared library
+vcpkg install easyzip:x86-windows
+
+# Static library
+vcpkg install easyzip:x86-windows-static
+```
+
 
 ---
 
