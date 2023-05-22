@@ -30,7 +30,7 @@ if (MSVC AND USE_STATIC_CRT)
     endforeach()
 endif()
 
-if (NOT BUILD_SHARED_LIBS)
+if (NOT EASYZIP_BUILD_SHARED_LIBS)
 	# Use ppx static library
 	add_definitions(-DEASYZIP_STATIC)
 endif()
@@ -58,7 +58,7 @@ target_link_libraries(${EXE_NAME} GTest::GTest GTest::Main)
 add_test(NAME unit
 COMMAND ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/unit_tests)
 
-if(BUILD_SHARED_LIBS)
+if(EASYZIP_BUILD_SHARED_LIBS)
 	add_dependencies(${EXE_NAME} easyzip)
 	
 	target_link_libraries(${EXE_NAME} 

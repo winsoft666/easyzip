@@ -17,28 +17,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
 
 project(easyzip C CXX)
 
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-option(BUILD_TESTS "Build tests project" OFF)
-option(USE_STATIC_CRT "Set to ON to build with static CRT on Windows (/MT)." OFF)
-
-if(MSVC)
-  set(EASYZIP_INSTALL_CMAKE_DIR share/easyzip)
-elseif(WIN32 AND NOT CYGWIN)
-  set(EASYZIP_INSTALL_CMAKE_DIR CMake)
-else()
-  set(EASYZIP_INSTALL_CMAKE_DIR lib/cmake/easyzip)
-endif()
-
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# Debug Output
-message(STATUS "BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}")
-message(STATUS "USE_STATIC_CRT=${USE_STATIC_CRT}")
-message(STATUS "CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}")
-message(STATUS "VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
-
+option(EASYZIP_BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(EASYZIP_BUILD_TESTS "Build tests project" OFF)
+option(EASYZIP_USE_STATIC_CRT "Set to ON to build with static CRT on Windows (/MT)." OFF)
 
 set(DEBUG_LIBNAME_SUFFIX "-d" 
 	CACHE STRING "Optional suffix to append to the library name for a debug build")
@@ -47,16 +28,13 @@ mark_as_advanced(DEBUG_LIBNAME_SUFFIX)
 # Unicode Support
 add_definitions(-DUNICODE -D_UNICODE -DNOMINMAX)
 
-
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-
 
 include_directories(./include)
 
 add_subdirectory(src)
 
-if(BUILD_TESTS)
+if(EASYZIP_BUILD_TESTS)
 	add_subdirectory(tests)
 	enable_testing()
 endif()
